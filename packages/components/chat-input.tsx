@@ -1,5 +1,5 @@
-import type { FormEvent } from 'react';
-import { useRef } from 'react';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 
 interface ChatInputProps {
   className?: string
@@ -8,20 +8,22 @@ interface ChatInputProps {
 }
 
 export function ChatInput(props: ChatInputProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [value, setValue] = useState('');
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(event.target.value);
+  };
 
-    if (textareaRef.current?.value) {
-      props.onSend?.(textareaRef.current.value);
+  const handleSubmit = () => {
+    if (value) {
+      props.onSend?.(value);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea name="prompt" ref={textareaRef} placeholder={props.placeholder} />
-      <button type="submit">Send</button>
-    </form>
+    <div>
+      <textarea placeholder={props.placeholder} onChange={handleChange} value={value} />
+      <button type="submit" onClick={handleSubmit}>Send</button>
+    </div>
   );
 }
