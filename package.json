@@ -4,22 +4,22 @@
   "version": "0.0.0",
   "private": true,
   "description": "Chat component integrated with web-llm (React JS)",
+  "author": "Maximiliano Garcia Mortigliengo",
+  "license": "ISC",
+  "homepage": "https://github.com/MaxiGarcia13/web-llm-chat#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxiGarcia13/web-llm-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MaxiGarcia13/web-llm-chat/issues"
+  },
   "keywords": [
     "chat",
     "component",
     "react",
     "web-llm"
   ],
-  "homepage": "https://github.com/MaxiGarcia13/web-llm-chat#readme",
-  "bugs": {
-    "url": "https://github.com/MaxiGarcia13/web-llm-chat/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MaxiGarcia13/web-llm-chat.git"
-  },
-  "license": "ISC",
-  "author": "Maximiliano Garcia Mortigliengo",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
@@ -33,10 +33,13 @@
     "react": "^19.2.0"
   },
   "devDependencies": {
+    "@eslint-react/eslint-plugin": "^2.3.7",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
     "react-dom": "^19.2.0",
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
