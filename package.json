@@ -1,0 +1,26 @@
+{
+  "name": "web-llm-chat",
+  "version": "0.0.0",
+  "description": "Chat component integrated with web-llm (React JS)",
+  "keywords": [
+    "chat",
+    "component",
+    "react",
+    "web-llm"
+  ],
+  "homepage": "https://github.com/MaxiGarcia13/web-llm-chat#readme",
+  "bugs": {
+    "url": "https://github.com/MaxiGarcia13/web-llm-chat/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaxiGarcia13/web-llm-chat.git"
+  },
+  "license": "ISC",
+  "author": "Maximiliano Garcia Mortigliengo",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
