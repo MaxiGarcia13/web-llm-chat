@@ -98,8 +98,8 @@ export function Chat() {
       />
       <ChatFooter
         className="mt-4"
-        placeholder="send a message"
-        buttonText="Send"
+        placeholder="Ask anything"
+        buttonText="Ask"
         onSend={sendPrompt}
         disabled={!isModelDownloaded}
       />
