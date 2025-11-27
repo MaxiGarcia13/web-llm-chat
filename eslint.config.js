@@ -10,6 +10,5 @@ export default antfu({
   },
   rules: {
     'style/semi': ['error', 'always'],
-    'max-lines': ['error', { max: 80 }],
   },
 });
