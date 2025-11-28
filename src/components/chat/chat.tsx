@@ -6,9 +6,11 @@ import { LoadingBar } from '@/components/loading-bar';
 import { DEFAULT_SYSTEM_TEMPLATE, MODEL_LIST } from '@/constants';
 import { useDebounce } from '@/hooks';
 import { cn, getModelForName } from '@/supports';
+import { Img } from '../img';
 import { ChatBar } from './chat-bar';
 import { ChatMessages } from './chat-messages';
 import { ChatModelSelector } from './chat-model-selector';
+import { ChatNoMessages } from './chat-no-messages';
 
 export function Chat() {
   const [engine, setEngine] = useState<MLCEngine | null>(null);
@@ -105,7 +107,7 @@ export function Chat() {
     <section
       className={
         cn(
-          'p-4 w-full h-full border border-solid border-neutral-300 rounded bg-gray-50 flex flex-col overflow-hidden',
+          'group p-4 w-full h-full rounded bg-amber-50 flex flex-col overflow-hidden',
         )
       }
     >
@@ -114,24 +116,26 @@ export function Chat() {
         && <LoadingBar progress={modelDownloadProgress?.progress ?? 0}>{modelDownloadProgress?.text}</LoadingBar>
       }
 
-      <ChatMessages
-        className="flex-1 mb-4"
-        messages={messages}
-        loading={isLoading}
+      {
+        messages.length > 0
+          ? <ChatMessages className="flex-1 mb-4" messages={messages} loading={isLoading} />
+          : <ChatNoMessages className="flex-1" />
+      }
+
+      <ChatBar
+        className="rounded-b-none border-2 border-solid border-purple-700 rounded focus-within:border-amber-300"
+        placeholder="Ask anything"
+        buttonContent={<Img src="/img/send.png" alt="Send" className="h-5 w-5" />}
+        onSend={debouncedSendPrompt}
       />
 
       <ChatModelSelector
-        className="bg-neutral-200 rounded rounded-b-none"
+        className="bg-purple-700 text-neutral-200 rounded rounded-t-none group-focus-within:bg-amber-300 group-focus-within:text-neutral-900"
         model={model}
         models={MODEL_LIST}
         onChange={handleModelChange}
       />
-      <ChatBar
-        className="rounded-t-none"
-        placeholder="Ask anything"
-        buttonContent="▶️"
-        onSend={debouncedSendPrompt}
-      />
+
       <footer className="flex items-center justify-end mt-4">
         <span className="text-sm">
           By Maximiliano Garcia Mortigliengo

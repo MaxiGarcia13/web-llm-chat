@@ -42,7 +42,7 @@ export function ChatBar({
   return (
     <div className={
       cn(
-        'flex gap-2 w-full border border-solid border-neutral-200 rounded focus-within:border-blue-500 focus-within:rounded',
+        'flex gap-2 w-full',
         className,
       )
     }

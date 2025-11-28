@@ -21,7 +21,7 @@ export function ChatMessage(props: ChatMessageProps) {
         className={
           cn(
             'p-4 rounded text-neutral-900 flex flex-col items-end group relative',
-            props.message.role === 'assistant' ? '' : 'bg-gray-100',
+            props.message.role === 'assistant' ? '' : 'bg-purple-200',
           )
         }
       >
