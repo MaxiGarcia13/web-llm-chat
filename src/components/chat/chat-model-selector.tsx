@@ -1,6 +1,6 @@
 import type { Model } from '@/types';
 import { useMemo, useState } from 'react';
-import { cn, getModelForDisplayName, getModelForName, getModelsForSize } from '@/supports';
+import { cn, getModelForName, getModelsForSize } from '@/supports';
 
 interface ChatModelSelectorProps {
   className?: string
@@ -10,27 +10,28 @@ interface ChatModelSelectorProps {
 }
 
 export function ChatModelSelector({ className, model, models, onChange }: ChatModelSelectorProps) {
+  const [selectedProvider, setSelectedProvider] = useState(model.provider);
   const [selectedModel, setSelectedModel] = useState(model);
 
   const modelNames = useMemo<string[]>(() => {
     const names = new Set<string>();
 
     models.forEach((model) => {
-      names.add(model.displayName);
+      names.add(model.provider);
     });
 
     return Array.from(names);
   }, [models]);
 
   const modelGroups = useMemo<Record<string, string[]>>(() => {
-    const filteredModels = models.filter(model => model.displayName === selectedModel.displayName);
+    const filteredModels = models.filter(model => model.provider === selectedProvider);
 
     return {
       Small: getModelsForSize(filteredModels, 'small').map(model => model.name),
       Medium: getModelsForSize(filteredModels, 'medium').map(model => model.name),
       Large: getModelsForSize(filteredModels, 'large').map(model => model.name),
     };
-  }, [selectedModel, models]);
+  }, [selectedProvider, models]);
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const model = getModelForName(models, e.target.value);
@@ -45,13 +46,9 @@ export function ChatModelSelector({ className, model, models, onChange }: ChatMo
     <section className={cn('flex gap-2 px-4 py-2', className)}>
       <select
         className="outline-blue-500"
-        value={selectedModel?.displayName}
+        value={selectedProvider}
         onChange={(e) => {
-          const model = getModelForDisplayName(models, e.target.value);
-
-          if (model) {
-            setSelectedModel(model);
-          }
+          setSelectedProvider(e.target.value);
         }}
       >
         {modelNames.map(displayName => (
