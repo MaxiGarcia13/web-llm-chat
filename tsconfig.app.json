@@ -16,7 +16,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": [
-        "./package/*"
+        "./src/*"
       ]
     },
     "types": [

@@ -4,7 +4,7 @@ import { cn } from '@/supports';
 import { ChatInput } from './chat-input';
 import { ChatSendButton } from './chat-send-button';
 
-interface ChatInputProps {
+interface ChatBarProps {
   className?: string
   onSend?: (prompt: string) => void
   placeholder?: string
@@ -14,7 +14,15 @@ interface ChatInputProps {
   SendButton?: React.FC<ComponentProps<typeof ChatSendButton>>
 }
 
-export function ChatFooter({ className, onSend, placeholder, buttonText, disabled, Input = ChatInput, SendButton = ChatSendButton }: ChatInputProps) {
+export function ChatBar({
+  className,
+  onSend,
+  placeholder,
+  buttonText,
+  disabled,
+  Input = ChatInput,
+  SendButton = ChatSendButton,
+}: ChatBarProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSubmit = () => {

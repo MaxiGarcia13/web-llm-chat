@@ -2,10 +2,10 @@ import type { InitProgressCallback, MLCEngine } from '@mlc-ai/web-llm';
 import type { Message } from '@/types';
 import { CreateMLCEngine } from '@mlc-ai/web-llm';
 import { useEffect, useState } from 'react';
+import { LoadingBar } from '@/components/loading-bar';
 import { USER_ASSISTANT, USER_ME } from '@/constants';
-import { ChatFooter } from './chat-footer';
+import { ChatBar } from './chat-bar';
 import { ChatMessages } from './chat-messages';
-import { LoadingBar } from './loading-bar';
 
 const defaultModel = 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC';
 
@@ -96,7 +96,7 @@ export function Chat() {
         messages={messages}
         loading={isLoading}
       />
-      <ChatFooter
+      <ChatBar
         className="mt-4"
         placeholder="Ask anything"
         buttonText="Ask"
