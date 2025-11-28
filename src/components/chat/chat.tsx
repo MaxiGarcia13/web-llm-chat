@@ -3,7 +3,7 @@ import type { Message, Model } from '@/types';
 import { CreateMLCEngine } from '@mlc-ai/web-llm';
 import { useState } from 'react';
 import { LoadingBar } from '@/components/loading-bar';
-import { DEFAULT_SYSTEM_TEMPLATE, MODEL_LIST } from '@/constants';
+import { DEFAULT_ASSISTANT_TEMPLATE, DEFAULT_SYSTEM_TEMPLATE, MODEL_LIST } from '@/constants';
 import { useDebounce } from '@/hooks';
 import { cn, getModelForName } from '@/supports';
 import { Img } from '../img';
@@ -17,10 +17,10 @@ export function Chat() {
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [model, setModel] = useState<Model>(() => getModelForName(MODEL_LIST, 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC') ?? MODEL_LIST[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [modelDownloadProgress, setModelDownloadProgress] = useState<Parameters<InitProgressCallback>[0]>(undefined);
+  const [modelDownloadProgress, setModelDownloadProgress] = useState<Parameters<InitProgressCallback>[0] | undefined>(undefined);
   const isModelDownloaded = (modelDownloadProgress?.progress ?? 0) >= 1;
 
-  async function sendPrompt(prompt: string) {
+  function sendPrompt(prompt: string) {
     const newMessages: Array<Message> = [
       ...messages,
       {
@@ -40,6 +40,10 @@ export function Chat() {
       return newMessages;
     });
 
+    talkToLLM(prompt, newMessages);
+  };
+
+  async function talkToLLM(prompt: string, messages: Message[]) {
     if (engine) {
       await engine.chat.completions.create({
         ...model.recommendedConfig,
@@ -52,6 +56,10 @@ export function Chat() {
               .replace('{{time}}', new Date().toLocaleString()),
           },
           {
+            role: 'assistant',
+            content: DEFAULT_ASSISTANT_TEMPLATE,
+          },
+          {
             role: 'user',
             content: prompt,
           },
@@ -61,7 +69,7 @@ export function Chat() {
       engine.getMessage()
         .then((answer) => {
           setMessages([
-            ...newMessages,
+            ...messages,
             {
               text: answer,
               timestamp: Date.now(),
@@ -76,7 +84,7 @@ export function Chat() {
           setIsLoading(false);
         });
     }
-  };
+  }
 
   async function initModel(prompt?: string) {
     const engine = await CreateMLCEngine(
@@ -123,16 +131,17 @@ export function Chat() {
       }
 
       <ChatModelSelector
-        className="bg-purple-700 text-neutral-200 rounded rounded-b-none group-focus-within:bg-amber-300 group-focus-within:text-neutral-900"
+        className="bg-amber-300 rounded rounded-b-none group-focus-within:bg-purple-700 group-focus-within:text-neutral-200"
         model={model}
         models={MODEL_LIST}
         onChange={handleModelChange}
       />
 
       <ChatBar
-        className="rounded-t-none border-2 border-solid border-purple-700 rounded focus-within:border-amber-300"
+        className="rounded-t-none border-2 border-solid border-amber-300 rounded group-focus-within:border-purple-700"
         placeholder="Ask anything"
         buttonContent={<Img src="/img/send.png" alt="Send" className="h-5 w-5" />}
+        disabled={isLoading}
         onSend={debouncedSendPrompt}
       />
 
