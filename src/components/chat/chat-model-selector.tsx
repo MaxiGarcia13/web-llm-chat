@@ -23,12 +23,14 @@ export function ChatModelSelector({ className, model, models, onChange }: ChatMo
   }, [models]);
 
   const modelGroups = useMemo<Record<string, string[]>>(() => {
+    const filteredModels = models.filter(model => model.displayName === selectedModel.displayName);
+
     return {
-      Small: getModelsForSize(models, 'small').map(model => model.name),
-      Medium: getModelsForSize(models, 'medium').map(model => model.name),
-      Large: getModelsForSize(models, 'large').map(model => model.name),
+      Small: getModelsForSize(filteredModels, 'small').map(model => model.name),
+      Medium: getModelsForSize(filteredModels, 'medium').map(model => model.name),
+      Large: getModelsForSize(filteredModels, 'large').map(model => model.name),
     };
-  }, [models]);
+  }, [selectedModel, models]);
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const model = getModelForName(models, e.target.value);
@@ -44,7 +46,13 @@ export function ChatModelSelector({ className, model, models, onChange }: ChatMo
       <select
         className="outline-blue-500"
         value={selectedModel?.displayName}
-        onChange={e => setSelectedModel(getModelForDisplayName(models, e.target.value))}
+        onChange={(e) => {
+          const model = getModelForDisplayName(models, e.target.value);
+
+          if (model) {
+            setSelectedModel(model);
+          }
+        }}
       >
         {modelNames.map(displayName => (
           <option key={displayName} value={displayName}>
