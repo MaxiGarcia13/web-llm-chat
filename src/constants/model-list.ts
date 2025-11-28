@@ -579,20 +579,3 @@ export const MODEL_LIST: Array<Model> = [
     },
   },
 ];
-
-export const SMALL_MODELS = MODEL_LIST
-  .filter(model =>
-    // eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/optimal-quantifier-concatenation
-    model.name?.match(/^.*(?:\d+(?:[._]\d+)?M|[0-2](?:[._]\d+)?B).*$/i),
-  );
-
-export const MEDIUM_MODELS = MODEL_LIST
-  .filter(model =>
-    // eslint-disable-next-line regexp/no-useless-non-capturing-group
-    model.name?.match(/^.*(?:[3-7](?:[._]\d+)?B).*$/i),
-  );
-
-export const BIG_MODELS = MODEL_LIST
-  // eslint-disable-next-line regexp/no-super-linear-backtracking
-  .filter(model => model.name?.match(/^.*(?:[89](?:[._]\d+)?B|[1-9]\d+(?:[._]\d+)?B).*$/i),
-  );
