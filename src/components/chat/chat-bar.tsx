@@ -53,7 +53,6 @@ export function ChatBar({
         placeholder={placeholder}
         onKeyUp={onKeyUp}
         disabled={disabled}
-        autoFocus
       />
       <SendButton
         type="submit"
