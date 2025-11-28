@@ -122,18 +122,18 @@ export function Chat() {
           : <ChatNoMessages className="flex-1" />
       }
 
-      <ChatBar
-        className="rounded-b-none border-2 border-solid border-purple-700 rounded focus-within:border-amber-300"
-        placeholder="Ask anything"
-        buttonContent={<Img src="/img/send.png" alt="Send" className="h-5 w-5" />}
-        onSend={debouncedSendPrompt}
-      />
-
       <ChatModelSelector
-        className="bg-purple-700 text-neutral-200 rounded rounded-t-none group-focus-within:bg-amber-300 group-focus-within:text-neutral-900"
+        className="bg-purple-700 text-neutral-200 rounded rounded-b-none group-focus-within:bg-amber-300 group-focus-within:text-neutral-900"
         model={model}
         models={MODEL_LIST}
         onChange={handleModelChange}
+      />
+
+      <ChatBar
+        className="rounded-t-none border-2 border-solid border-purple-700 rounded focus-within:border-amber-300"
+        placeholder="Ask anything"
+        buttonContent={<Img src="/img/send.png" alt="Send" className="h-5 w-5" />}
+        onSend={debouncedSendPrompt}
       />
 
       <footer className="flex items-center justify-end mt-4">
