@@ -50,6 +50,7 @@ export function ChatBar({
       <Input
         ref={textareaRef}
         className="outline-none"
+        autoFocus={window === window.parent}
         placeholder={placeholder}
         onKeyUp={onKeyUp}
         disabled={disabled}
