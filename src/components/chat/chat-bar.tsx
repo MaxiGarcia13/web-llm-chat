@@ -8,7 +8,7 @@ interface ChatBarProps {
   className?: string
   onSend?: (prompt: string) => void
   placeholder?: string
-  buttonText?: string
+  buttonContent?: React.ReactNode | string
   disabled?: boolean
   Input?: React.FC<ComponentProps<typeof ChatInput>>
   SendButton?: React.FC<ComponentProps<typeof ChatSendButton>>
@@ -18,7 +18,7 @@ export function ChatBar({
   className,
   onSend,
   placeholder,
-  buttonText,
+  buttonContent,
   disabled,
   Input = ChatInput,
   SendButton = ChatSendButton,
@@ -29,6 +29,7 @@ export function ChatBar({
     if (textareaRef.current?.value.length) {
       onSend?.(textareaRef.current.value);
       textareaRef.current.value = '';
+      textareaRef.current.focus();
     }
   };
 
@@ -39,9 +40,16 @@ export function ChatBar({
   };
 
   return (
-    <footer className={cn('flex gap-2 w-full border border-solid border-neutral-300 rounded', className)}>
+    <div className={
+      cn(
+        'flex gap-2 w-full border border-solid border-neutral-200 rounded focus-within:border-blue-500 focus-within:rounded',
+        className,
+      )
+    }
+    >
       <Input
         ref={textareaRef}
+        className="outline-none"
         placeholder={placeholder}
         onKeyUp={onKeyUp}
         disabled={disabled}
@@ -52,8 +60,8 @@ export function ChatBar({
         onClick={handleSubmit}
         disabled={disabled}
       >
-        {buttonText}
+        {buttonContent}
       </SendButton>
-    </footer>
+    </div>
   );
 }

@@ -1,30 +1,36 @@
 import type { InitProgressCallback, MLCEngine } from '@mlc-ai/web-llm';
-import type { Message } from '@/types';
+import type { Message, Model } from '@/types';
 import { CreateMLCEngine } from '@mlc-ai/web-llm';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { LoadingBar } from '@/components/loading-bar';
-import { USER_ASSISTANT, USER_ME } from '@/constants';
+import { DEFAULT_SYSTEM_TEMPLATE, MODEL_LIST } from '@/constants';
+import { useDebounce } from '@/hooks';
+import { cn, getModelForName } from '@/supports';
 import { ChatBar } from './chat-bar';
 import { ChatMessages } from './chat-messages';
-
-const defaultModel = 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC';
+import { ChatModelSelector } from './chat-model-selector';
 
 export function Chat() {
   const [engine, setEngine] = useState<MLCEngine | null>(null);
   const [messages, setMessages] = useState<Array<Message>>([]);
+  const [model, setModel] = useState<Model>(() => getModelForName(MODEL_LIST, 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC') ?? MODEL_LIST[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [modelDownloadProgress, setModelDownloadProgress] = useState<Parameters<InitProgressCallback>[0]>();
+  const [modelDownloadProgress, setModelDownloadProgress] = useState<Parameters<InitProgressCallback>[0]>(undefined);
   const isModelDownloaded = (modelDownloadProgress?.progress ?? 0) >= 1;
 
-  const sendPrompt = async (prompt: string) => {
+  async function sendPrompt(prompt: string) {
     const newMessages: Array<Message> = [
       ...messages,
       {
         text: prompt,
-        timestamp: Date.now(),
-        user: USER_ME,
+        timestamp: new Date().getTime(),
+        role: 'user',
       },
     ];
+
+    if (!isModelDownloaded) {
+      return initModel(prompt);
+    }
 
     setMessages(() => {
       setIsLoading(true);
@@ -34,10 +40,14 @@ export function Chat() {
 
     if (engine) {
       await engine.chat.completions.create({
+        ...model.recommendedConfig,
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful AI assistant.',
+            content: DEFAULT_SYSTEM_TEMPLATE
+              .replace('{privder}', model.provider)
+              .replace('{{display_name}}', model.displayName)
+              .replace('{{time}}', new Date().toLocaleString()),
           },
           {
             role: 'user',
@@ -53,7 +63,7 @@ export function Chat() {
             {
               text: answer,
               timestamp: Date.now(),
-              user: USER_ASSISTANT,
+              role: 'assistant',
             },
           ]);
         })
@@ -66,43 +76,70 @@ export function Chat() {
     }
   };
 
-  function initProgressCallback(status: Parameters<InitProgressCallback>[0]): ReturnType<InitProgressCallback> {
-    setModelDownloadProgress(status);
-  }
-
-  async function init() {
+  async function initModel(prompt?: string) {
     const engine = await CreateMLCEngine(
-      defaultModel,
-      { initProgressCallback },
+      model.name,
+      { initProgressCallback: status => initProgressCallback(status, prompt) },
     );
 
     setEngine(engine);
   }
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    init();
-  }, []);
+  const { debouncedFn: debouncedSendPrompt } = useDebounce(sendPrompt, 100);
+
+  function initProgressCallback(status: Parameters<InitProgressCallback>[0], prompt?: string): ReturnType<InitProgressCallback> {
+    setModelDownloadProgress(status);
+    if (prompt && status.progress >= 1 && status.text.toLowerCase().includes('finish loading')) {
+      debouncedSendPrompt(prompt);
+    }
+  }
+
+  function handleModelChange(newModel: Model) {
+    setModel(newModel);
+    setMessages([]);
+    setModelDownloadProgress(undefined);
+    initModel();
+  }
 
   return (
-    <section className="p-4 w-full h-full border border-solid border-neutral-300 rounded bg-gray-50 flex flex-col overflow-hidden">
+    <section
+      className={
+        cn(
+          'p-4 w-full h-full border border-solid border-neutral-300 rounded bg-gray-50 flex flex-col overflow-hidden',
+        )
+      }
+    >
       {
-        !isModelDownloaded
+        modelDownloadProgress && !isModelDownloaded
         && <LoadingBar progress={modelDownloadProgress?.progress ?? 0}>{modelDownloadProgress?.text}</LoadingBar>
       }
 
       <ChatMessages
-        className="flex-1"
+        className="flex-1 mb-4"
         messages={messages}
         loading={isLoading}
       />
-      <ChatBar
-        className="mt-4"
-        placeholder="Ask anything"
-        buttonText="Ask"
-        onSend={sendPrompt}
-        disabled={!isModelDownloaded}
+
+      <ChatModelSelector
+        className="bg-neutral-200 rounded rounded-b-none"
+        model={model}
+        models={MODEL_LIST}
+        onChange={handleModelChange}
       />
+      <ChatBar
+        className="rounded-t-none"
+        placeholder="Ask anything"
+        buttonContent="▶️"
+        onSend={debouncedSendPrompt}
+      />
+      <footer className="flex items-center justify-end mt-4">
+        <span className="text-sm">
+          By Maximiliano Garcia Mortigliengo
+          <a className="text-sm ml-1 text-blue-500" href="https://github.com/MaxiGarcia13/web-llm-chat" target="_blank" rel="noopener noreferrer">
+            (repo)
+          </a>
+        </span>
+      </footer>
     </section>
   );
 }

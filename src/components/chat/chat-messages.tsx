@@ -17,12 +17,12 @@ export function ChatMessages(props: ChatMessagesProps) {
   }, [props.messages]);
 
   return (
-    <ul ref={litRef} className={cn('w-full h-full flex flex-col gap-4 overflow-y-auto p-2', props.className)}>
+    <ul ref={litRef} className={cn('transition-all w-full h-full flex flex-col gap-4 overflow-y-auto p-2', props.className)}>
       {props.messages.map(message => (
         <ChatMessage key={message.timestamp} message={message} />
       ))}
 
-      {props.loading && <li>Loading...</li>}
+      {props.loading && <li>Thinking...</li>}
     </ul>
   );
 }

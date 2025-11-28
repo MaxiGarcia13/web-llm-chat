@@ -4,6 +4,8 @@ import { Chat } from '@/components';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Chat />
+    <div className="flex flex-col items-center justify-center h-full">
+      <Chat />
+    </div>
   </StrictMode>,
 );
