@@ -30,11 +30,11 @@
     "postinstall": "npx simple-git-hooks"
   },
   "dependencies": {
-    "@antfu/eslint-config": "^6.2.0",
     "@mlc-ai/web-llm": "^0.2.80",
     "react": "^19.2.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^6.2.0",
     "@eslint-react/eslint-plugin": "^2.3.7",
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^24.10.1",
