@@ -117,7 +117,8 @@ export function Chat() {
     <section
       className={
         cn(
-          'group p-4 w-full h-full rounded bg-amber-50 flex flex-col overflow-hidden',
+          'group w-full rounded bg-amber-50 flex flex-col overflow-hidden relative transition-all duration-1000 ease-in',
+          modelDownloadProgress && 'h-full',
         )
       }
     >
@@ -129,7 +130,7 @@ export function Chat() {
       {
         messages.length > 0
           ? <ChatMessages className="flex-1 mb-4" messages={messages} loading={isLoading} />
-          : <ChatNoMessages className="flex-1" />
+          : <ChatNoMessages className="flex-1 pt-0" />
       }
 
       <ChatModelSelector
@@ -138,7 +139,6 @@ export function Chat() {
         models={MODEL_LIST}
         onChange={handleModelChange}
       />
-
       <ChatBar
         className={
           cn(
