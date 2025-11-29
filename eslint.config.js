@@ -10,5 +10,7 @@ export default antfu({
   },
   rules: {
     'style/semi': ['error', 'always'],
+    'antfu/if-newline': 'off',
+    'style/brace-style': 'off',
   },
 });

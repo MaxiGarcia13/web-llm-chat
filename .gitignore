@@ -32,3 +32,6 @@ coverage
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
+
+*storybook.log
+storybook-static
