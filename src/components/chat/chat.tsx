@@ -20,29 +20,6 @@ export function Chat() {
   const [modelDownloadProgress, setModelDownloadProgress] = useState<Parameters<InitProgressCallback>[0] | undefined>(undefined);
   const isModelDownloaded = (modelDownloadProgress?.progress ?? 0) >= 1;
 
-  function sendPrompt(prompt: string) {
-    const newMessages: Array<Message> = [
-      ...messages,
-      {
-        text: prompt,
-        timestamp: new Date().getTime(),
-        role: 'user',
-      },
-    ];
-
-    if (!isModelDownloaded) {
-      return initModel(prompt);
-    }
-
-    setMessages(() => {
-      setIsLoading(true);
-
-      return newMessages;
-    });
-
-    talkToLLM(prompt, newMessages);
-  };
-
   async function talkToLLM(prompt: string, messages: Message[]) {
     if (engine) {
       await engine.chat.completions.create({
@@ -85,6 +62,31 @@ export function Chat() {
         });
     }
   }
+
+  const { debouncedFn: debouncedTalkToLLM } = useDebounce(talkToLLM, 100);
+
+  function sendPrompt(prompt: string) {
+    const newMessages: Array<Message> = [
+      ...messages,
+      {
+        text: prompt,
+        timestamp: new Date().getTime(),
+        role: 'user',
+      },
+    ];
+
+    if (!isModelDownloaded) {
+      return initModel(prompt);
+    }
+
+    setMessages(() => {
+      setIsLoading(true);
+
+      return newMessages;
+    });
+
+    debouncedTalkToLLM(prompt, newMessages);
+  };
 
   async function initModel(prompt?: string) {
     const engine = await CreateMLCEngine(
@@ -138,7 +140,11 @@ export function Chat() {
       />
 
       <ChatBar
-        className="rounded-t-none border-2 border-solid border-amber-300 rounded group-focus-within:border-purple-700"
+        className={
+          cn(
+            'rounded-t-none border-2 border-solid border-amber-300 rounded group-focus-within:border-purple-700',
+          )
+        }
         placeholder="Ask anything"
         buttonContent={<Img src="/img/send.png" alt="Send" className="h-5 w-5" />}
         disabled={isLoading}
