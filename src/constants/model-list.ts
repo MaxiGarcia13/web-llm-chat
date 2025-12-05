@@ -44,6 +44,17 @@ const DEEP_SEEK_COMMON_CONFIGS = {
   },
 };
 
+const TINY_LLAMA_COMMON_CONFIGS = {
+  displayName: 'TinyLlama',
+  provider: 'Zhang Peiyuan',
+  recommendedConfig: {
+    temperature: 1,
+    presence_penalty: 0,
+    frequency_penalty: 0,
+    top_p: 1,
+  },
+};
+
 export const DEFAULT_MODEL = 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC';
 
 export const MODEL_LIST: Array<Model> = [
@@ -577,5 +588,23 @@ export const MODEL_LIST: Array<Model> = [
       temperature: 0.7,
       top_p: 0.95,
     },
+  },
+  {
+
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC',
+  },
+  {
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC',
+  },
+  {
+
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC-1k',
+  },
+  {
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC-1k',
   },
 ];
