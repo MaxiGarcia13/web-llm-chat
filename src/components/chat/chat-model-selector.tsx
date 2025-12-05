@@ -11,7 +11,7 @@ interface ChatModelSelectorProps {
 
 export function ChatModelSelector({ className, model, models, onChange }: ChatModelSelectorProps) {
   const [selectedProvider, setSelectedProvider] = useState(model.provider);
-  const [selectedModel, setSelectedModel] = useState(model);
+  const [selectedModel, setSelectedModel] = useState<Model | undefined>(model);
 
   const modelNames = useMemo<string[]>(() => {
     const names = new Set<string>();
@@ -49,6 +49,7 @@ export function ChatModelSelector({ className, model, models, onChange }: ChatMo
         value={selectedProvider}
         onChange={(e) => {
           setSelectedProvider(e.target.value);
+          setSelectedModel(undefined);
         }}
       >
         {modelNames.map(displayName => (
