@@ -607,4 +607,36 @@ export const MODEL_LIST: Array<Model> = [
     ...TINY_LLAMA_COMMON_CONFIGS,
     name: 'TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC-1k',
   },
+  {
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v0.4-q4f16_1-MLC',
+    recommendedConfig: {
+      temperature: 0.7,
+      top_p: 0.95,
+    },
+  },
+  {
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v0.4-q4f32_1-MLC',
+    recommendedConfig: {
+      temperature: 0.7,
+      top_p: 0.95,
+    },
+  },
+  {
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v0.4-q4f16_1-MLC-1k',
+    recommendedConfig: {
+      temperature: 0.7,
+      top_p: 0.95,
+    },
+  },
+  {
+    ...TINY_LLAMA_COMMON_CONFIGS,
+    name: 'TinyLlama-1.1B-Chat-v0.4-q4f32_1-MLC-1k',
+    recommendedConfig: {
+      temperature: 0.7,
+      top_p: 0.95,
+    },
+  },
 ];
